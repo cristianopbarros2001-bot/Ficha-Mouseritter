@@ -3,24 +3,25 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Ficha Interativa - Mausritter</title>
+  <title>Ficha de Jogador - Mausritter</title>
   <style>
     :root {
-      --bg-paper: #f6f3eb;
-      --ink: #1e1d1b;
-      --border: #1e1d1b;
-      --accent: #b83b2b;
-      --slot-bg: #fffdf8;
-      --slot-used: #e8e2d5;
+      --bg-paper: #f7f4ec;
+      --ink: #1b1a18;
+      --border: #1b1a18;
+      --accent: #b53425;
+      --slot-bg: #fffdf9;
+      --slot-used: #e6dfd1;
+      --muted: #5c5850;
     }
 
     * { box-sizing: border-box; font-family: 'Courier New', Courier, monospace; }
 
     body {
-      background-color: #2b2927;
+      background-color: #262422;
       color: var(--ink);
       margin: 0;
-      padding: 20px 10px;
+      padding: 16px 8px;
       display: flex;
       justify-content: center;
     }
@@ -28,8 +29,8 @@
     .sheet {
       background-color: var(--bg-paper);
       width: 100%;
-      max-width: 850px;
-      padding: 24px;
+      max-width: 920px;
+      padding: 22px;
       border: 3px solid var(--border);
       box-shadow: 8px 8px 0px #111;
     }
@@ -40,55 +41,91 @@
       align-items: center;
       border-bottom: 3px solid var(--border);
       padding-bottom: 12px;
-      margin-bottom: 16px;
+      margin-bottom: 14px;
       flex-wrap: wrap;
       gap: 10px;
     }
 
-    h1 {
+    .title-block h1 {
       margin: 0;
-      font-size: 1.8rem;
+      font-size: 1.9rem;
       letter-spacing: 2px;
       text-transform: uppercase;
+      line-height: 1;
     }
 
-    .toolbar { display: flex; gap: 8px; flex-wrap: wrap; }
+    .title-block span {
+      font-size: 0.75rem;
+      color: var(--muted);
+      font-weight: bold;
+    }
+
+    .toolbar { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
 
     button {
       background: var(--ink);
       color: var(--bg-paper);
       border: 2px solid var(--ink);
-      padding: 6px 12px;
+      padding: 6px 10px;
       font-weight: bold;
       cursor: pointer;
-      font-size: 0.85rem;
+      font-size: 0.8rem;
       transition: 0.1s;
     }
 
     button:hover { background: var(--accent); border-color: var(--accent); }
+    button.accent { background: var(--accent); border-color: var(--accent); color: #fff; }
+    button.accent:hover { background: #8f261a; }
     button.secondary { background: transparent; color: var(--ink); }
     button.secondary:hover { background: var(--slot-used); }
 
-    .dice-log {
+    .roll-bar {
       background: var(--ink);
       color: #fff;
       padding: 10px 14px;
-      margin-bottom: 16px;
-      font-size: 0.95rem;
+      margin-bottom: 14px;
+      font-size: 0.9rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      min-height: 42px;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .roll-controls {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .roll-mode {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+      font-size: 0.78rem;
+      background: #33302d;
+      padding: 4px 8px;
+      border: 1px solid #555;
+    }
+
+    .roll-mode select {
+      background: var(--bg-paper);
+      color: var(--ink);
+      border: none;
+      font-weight: bold;
+      padding: 2px 4px;
+      font-size: 0.78rem;
     }
 
     .grid-top {
       display: grid;
-      grid-template-columns: 1.4fr 1fr;
-      gap: 16px;
-      margin-bottom: 16px;
+      grid-template-columns: 1.45fr 1fr;
+      gap: 14px;
+      margin-bottom: 14px;
     }
 
-    @media (max-width: 650px) {
+    @media (max-width: 720px) {
       .grid-top { grid-template-columns: 1fr; }
     }
 
@@ -107,41 +144,55 @@
       margin-bottom: 10px;
       display: flex;
       justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .field-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px 12px;
+    }
+
+    @media (max-width: 500px) {
+      .field-grid { grid-template-columns: 1fr; }
     }
 
     .field-row {
       display: flex;
-      gap: 10px;
-      margin-bottom: 8px;
+      gap: 6px;
       align-items: center;
     }
 
-    .field-row label { font-weight: bold; font-size: 0.85rem; min-width: 85px; }
+    .field-row.full { grid-column: 1 / -1; }
+    .field-row label { font-weight: bold; font-size: 0.8rem; min-width: 88px; }
 
     input[type="text"], input[type="number"], textarea {
       width: 100%;
       border: none;
       border-bottom: 1px dashed var(--border);
       background: transparent;
-      font-size: 0.95rem;
+      font-size: 0.9rem;
       padding: 2px 4px;
       color: var(--ink);
     }
 
-    input:focus, textarea:focus { outline: none; background: #fff8dc; }
+    input:focus, textarea:focus { outline: none; background: #fff7d6; }
 
     /* Atributos */
     .stats-table { width: 100%; border-collapse: collapse; }
     .stats-table th, .stats-table td {
       border: 1px solid var(--border);
-      padding: 6px;
+      padding: 5px;
       text-align: center;
     }
+    .stats-table th { font-size: 0.75rem; background: var(--slot-used); }
     .stats-table input {
-      width: 45px;
+      width: 46px;
       text-align: center;
       font-weight: bold;
-      font-size: 1.1rem;
+      font-size: 1.05rem;
       border-bottom: none;
     }
 
@@ -152,37 +203,50 @@
       border-color: var(--accent);
     }
 
-    /* Inventário 2x5 */
-    .inventory-section { margin-top: 16px; }
-
-    .inventory-grid {
+    /* Inventário Oficial (Patas | Corpo | Bolsa 1-6) */
+    .inv-layout {
       display: grid;
-      grid-template-columns: repeat(5, 1fr);
+      grid-template-columns: 1fr 1fr 3fr;
       gap: 8px;
     }
 
-    @media (max-width: 700px) {
-      .inventory-grid { grid-template-columns: repeat(2, 1fr); }
+    @media (max-width: 780px) {
+      .inv-layout { grid-template-columns: 1fr; }
+    }
+
+    .inv-col-paws, .inv-col-body {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .inv-col-pack {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+
+    @media (max-width: 520px) {
+      .inv-col-pack { grid-template-columns: repeat(2, 1fr); }
     }
 
     .inv-slot {
       border: 2px solid var(--border);
       background: var(--slot-bg);
-      padding: 8px;
-      min-height: 115px;
+      padding: 7px;
+      min-height: 112px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      position: relative;
     }
 
     .inv-slot.occupied { background: var(--slot-used); }
 
     .slot-header {
-      font-size: 0.7rem;
+      font-size: 0.68rem;
       font-weight: bold;
       text-transform: uppercase;
-      color: #555;
+      color: var(--muted);
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -190,23 +254,24 @@
 
     .inv-slot textarea {
       resize: none;
-      height: 55px;
-      font-size: 0.85rem;
+      height: 54px;
+      font-size: 0.82rem;
       border: none;
       margin-top: 4px;
       font-weight: bold;
+      line-height: 1.2;
     }
 
     .usage-dots {
       display: flex;
-      gap: 6px;
+      gap: 5px;
       align-items: center;
       margin-top: 4px;
     }
 
     .dot {
-      width: 14px;
-      height: 14px;
+      width: 13px;
+      height: 13px;
       border: 2px solid var(--ink);
       border-radius: 50%;
       cursor: pointer;
@@ -215,15 +280,78 @@
 
     .dot.filled { background: var(--accent); }
 
-    .bottom-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 16px;
-      margin-top: 16px;
+    .inv-legend {
+      font-size: 0.72rem;
+      color: var(--muted);
+      margin-top: 8px;
+      border-top: 1px dashed var(--border);
+      padding-top: 6px;
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px;
     }
 
-    @media (max-width: 650px) {
-      .bottom-grid { grid-template-columns: 1fr; }
+    .heavy-alert {
+      color: var(--accent);
+      font-weight: bold;
+      display: none;
+    }
+
+    /* Progressão & Bravura */
+    .prog-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-top: 14px;
+    }
+
+    @media (max-width: 680px) {
+      .prog-grid { grid-template-columns: 1fr; }
+    }
+
+    .grit-slots {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px;
+      margin-top: 6px;
+    }
+
+    .grit-box {
+      border: 1px dashed var(--border);
+      padding: 4px;
+      background: var(--bg-paper);
+    }
+
+    .grit-box input {
+      font-size: 0.78rem;
+      border-bottom: none;
+      text-align: center;
+    }
+
+    /* Ajudante */
+    .hireling-section { margin-top: 14px; }
+    .hireling-content { display: none; margin-top: 10px; }
+    .hireling-content.open { display: block; }
+
+    .hireling-grid {
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: 12px;
+    }
+
+    @media (max-width: 720px) {
+      .hireling-grid { grid-template-columns: 1fr; }
+    }
+
+    .hireling-inv {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px;
+    }
+
+    @media (max-width: 500px) {
+      .hireling-inv { grid-template-columns: repeat(2, 1fr); }
     }
   </style>
 </head>
@@ -231,60 +359,90 @@
 
 <div class="sheet">
   <header>
-    <h1>MAUSRITTER</h1>
+    <div class="title-block">
+      <h1>MAUSRITTER</h1>
+      <span>Um jogo de Espada e Bigodes</span>
+    </div>
     <div class="toolbar">
-      <button onclick="rollDice(20, 'd20 Livre')">Rolar d20</button>
-      <button onclick="rollDice(6, 'd6 Dano/Uso')">Rolar d6</button>
-      <button class="secondary" onclick="exportData()">Exportar JSON</button>
+      <button class="accent" onclick="generateRandomMouse()">🎲 Gerar Rato</button>
+      <button onclick="rollDice(20, 'd20')">d20</button>
+      <button onclick="rollDice(6, 'd6')">d6</button>
+      <button onclick="rollDice(8, 'd8')">d8</button>
+      <button class="secondary" id="soundToggle" onclick="toggleSound()">🔊 Som: ON</button>
+      <button class="secondary" onclick="exportData()">Exportar</button>
       <button class="secondary" onclick="document.getElementById('importFile').click()">Importar</button>
       <button class="secondary" onclick="resetSheet()">Limpar</button>
       <input type="file" id="importFile" style="display:none" accept=".json" onchange="importData(event)">
     </div>
   </header>
 
-  <div class="dice-log" id="diceLog">
-    <span>Pronto para rolar. Clique em "Testar" nos atributos ou nos botões acima.</span>
+  <div class="roll-bar">
+    <div id="diceLog">Pronto para aventurar. Selecione a dificuldade e clique em "Testar".</div>
+    <div class="roll-controls">
+      <div class="roll-mode">
+        <label for="rollDiff">Dificuldade:</label>
+        <select id="rollDiff">
+          <option value="2">Fácil (+2)</option>
+          <option value="0" selected>Normal (0)</option>
+          <option value="-2">Difícil (-2)</option>
+          <option value="-4">Muito Difícil (-4)</option>
+        </select>
+      </div>
+      <div class="roll-mode">
+        <label for="rollType">Condição:</label>
+        <select id="rollType">
+          <option value="normal">Normal (1d20)</option>
+          <option value="adv">Vantagem (Menor 2d20)</option>
+          <option value="dis">Desvantagem (Maior 2d20)</option>
+        </select>
+      </div>
+    </div>
   </div>
 
+  <!-- Topo: Identidade e Atributos -->
   <div class="grid-top">
-    <!-- Identidade -->
     <div class="box">
       <div class="box-title">Identidade do Rato</div>
-      <div class="field-row">
-        <label>Nome:</label>
-        <input type="text" id="name" placeholder="Ex: Pip, Bramble...">
-      </div>
-      <div class="field-row">
-        <label>Origem:</label>
-        <input type="text" id="background" placeholder="Ex: Cozinheiro, Ferreiro...">
-      </div>
-      <div class="field-row">
-        <label>Pelagem:</label>
-        <input type="text" id="coat" placeholder="Cor e padrão">
-      </div>
-      <div class="field-row">
-        <label>Sinal:</label>
-        <input type="text" id="sign" placeholder="Signo / Traço marcante">
-      </div>
-      <div class="field-row">
-        <label>Nível / XP:</label>
-        <input type="number" id="level" value="1" style="width:50px">
-        <span>/</span>
-        <input type="number" id="xp" value="0" style="width:70px">
-        <span style="font-size:0.8rem">XP</span>
+      <div class="field-grid">
+        <div class="field-row full">
+          <label>Nome:</label>
+          <input type="text" id="name" placeholder="Ex: Pimenta Bodespinha">
+        </div>
+        <div class="field-row">
+          <label>Antecedente:</label>
+          <input type="text" id="background" placeholder="Ex: Forrageador">
+        </div>
+        <div class="field-row">
+          <label>Signo:</label>
+          <input type="text" id="sign" placeholder="Ex: Estrela (Corajoso)">
+        </div>
+        <div class="field-row">
+          <label>Pelagem:</label>
+          <input type="text" id="coat" placeholder="Ex: Caramelo tigrado">
+        </div>
+        <div class="field-row">
+          <label>Visual:</label>
+          <input type="text" id="look" placeholder="Ex: Sem uma orelha">
+        </div>
+        <div class="field-row full">
+          <label>Retrato/Notas:</label>
+          <input type="text" id="desc" placeholder="Detalhes extras, cicatrizes ou trecos carregados...">
+        </div>
       </div>
     </div>
 
-    <!-- Atributos e Vida -->
     <div class="box">
-      <div class="box-title">Atributos & Proteção</div>
+      <div class="box-title">
+        <span>Atributos & PR</span>
+        <span style="font-size:0.7rem; color:var(--muted)">Sucesso ≤ Alvo</span>
+      </div>
       <table class="stats-table">
         <thead>
           <tr>
             <th>Atributo</th>
-            <th>Máx</th>
+            <th>Máxima</th>
             <th>Atual</th>
-            <th>Teste</th>
+            <th>Ação</th>
           </tr>
         </thead>
         <tbody>
@@ -307,88 +465,401 @@
             <td><button class="roll-btn" onclick="saveRoll('VON', 'wilCur')">Testar</button></td>
           </tr>
           <tr>
-            <td><strong>PV</strong></td>
+            <td><strong>PR</strong></td>
             <td><input type="number" id="hpMax" value="4"></td>
             <td><input type="number" id="hpCur" value="4"></td>
-            <td><span style="font-size:0.75rem">Proteção</span></td>
+            <td><span style="font-size:0.72rem; font-weight:bold;">Resistência</span></td>
           </tr>
         </tbody>
       </table>
     </div>
   </div>
 
-  <!-- Inventário 10 slots -->
-  <div class="box inventory-section">
+  <!-- Inventário Fiel à Ficha da Pág. 46 -->
+  <div class="box">
     <div class="box-title">
-      <span>Inventário (10 Espaços — Itens Grandes ocupam 2+)</span>
-      <span>Sementes (Moedas): <input type="number" id="pips" value="0" style="width:65px; font-weight:bold;"></span>
+      <span>Inventário (10 Espaços)</span>
+      <span>
+        Grãos: <input type="number" id="pips" value="0" style="width:55px; font-weight:bold; text-align:right;"> / 250
+      </span>
     </div>
-    <div class="inventory-grid" id="inventoryGrid"></div>
+
+    <div class="inv-layout">
+      <div class="inv-col-paws" id="colPaws"></div>
+      <div class="inv-col-body" id="colBody"></div>
+      <div class="inv-col-pack" id="colPack"></div>
+    </div>
+
+    <div class="inv-legend">
+      <span><strong>Carregado (Patas):</strong> Pronto p/ uso. <strong>Vestido (Corpo):</strong> Prepara rápido. <strong>Bolsa (1-6):</strong> Gasta 1 ação em combate.</span>
+      <span class="heavy-alert" id="heavyAlert">⚠️ PESADO (10/10): Sem correr & Desvantagem em testes!</span>
+    </div>
   </div>
 
-  <!-- Notas e Banco -->
-  <div class="bottom-grid">
+  <!-- Progressão, Bravura e Banco -->
+  <div class="prog-grid">
     <div class="box">
-      <div class="box-title">Anotações, Feitiços & Condições</div>
-      <textarea id="notes" rows="5" placeholder="Efeitos de condições, detalhes de feitiços ou contatos..."></textarea>
+      <div class="box-title">
+        <span>Nível, XP & Bravura</span>
+        <span style="font-size:0.7rem;">1 Grão de Tesouro = 1 XP</span>
+      </div>
+      <div class="field-grid">
+        <div class="field-row">
+          <label>Nível:</label>
+          <input type="number" id="level" value="1">
+        </div>
+        <div class="field-row">
+          <label>XP Atual:</label>
+          <input type="number" id="xp" value="0">
+        </div>
+        <div class="field-row full">
+          <label>Bravura:</label>
+          <input type="number" id="grit" value="0" style="width:50px;">
+          <span style="font-size:0.72rem; color:var(--muted)">Ignore Condições iguais à Bravura:</span>
+        </div>
+      </div>
+      <div class="grit-slots">
+        <div class="grit-box"><input type="text" id="grit1" placeholder="Condição 1"></div>
+        <div class="grit-box"><input type="text" id="grit2" placeholder="Condição 2"></div>
+        <div class="grit-box"><input type="text" id="grit3" placeholder="Condição 3"></div>
+      </div>
     </div>
+
     <div class="box">
-      <div class="box-title">Banco & Itens Guardados no Assentamento</div>
-      <textarea id="bank" rows="5" placeholder="Sementes guardadas e equipamentos em depósito..."></textarea>
+      <div class="box-title">Itens e Grãos no Banco (Taxa 1%)</div>
+      <textarea id="bank" rows="4" placeholder="Grãos guardados no cofre do povoado e equipamentos em depósito..."></textarea>
+    </div>
+  </div>
+
+  <!-- Ajudante (Pág. 14 e 47) -->
+  <div class="box hireling-section">
+    <div class="box-title">
+      <span>Ajudante Contratado (6 Espaços)</span>
+      <button class="secondary" style="padding:2px 8px; font-size:0.75rem;" onclick="toggleHireling()">Mostrar / Ocultar Ajudante</button>
+    </div>
+    <div class="hireling-content" id="hirelingContent">
+      <div class="hireling-grid">
+        <div>
+          <div class="field-row"><label>Nome:</label><input type="text" id="hName" placeholder="Ex: Tocheiro"></div>
+          <div class="field-row"><label>Visual:</label><input type="text" id="hLook" placeholder="Aparência"></div>
+          <div class="field-row"><label>Temperam.:</label><input type="text" id="hTemp" placeholder="Ex: Leal / Medroso"></div>
+          <div class="field-row"><label>Salário/dia:</label><input type="text" id="hWage" placeholder="Ex: 1g"></div>
+          <table class="stats-table" style="margin-top:8px;">
+            <tr>
+              <th>FOR</th><th>DES</th><th>VON</th><th>PR</th>
+            </tr>
+            <tr>
+              <td><input type="number" id="hStr" value="7"></td>
+              <td><input type="number" id="hDex" value="7"></td>
+              <td><input type="number" id="hWil" value="7"></td>
+              <td><input type="number" id="hHp" value="3"></td>
+            </tr>
+          </table>
+        </div>
+        <div class="hireling-inv" id="hirelingInv"></div>
+      </div>
     </div>
   </div>
 </div>
 
 <script>
-  const slotLabels = [
-    "Pata Principal", "Pata Secundária", "Mochila 1", "Mochila 2", "Mochila 3",
-    "Corpo 1", "Corpo 2", "Mochila 4", "Mochila 5", "Mochila 6"
+  // Sintetizador de Som de Dados (Web Audio API - sem arquivos externos)
+  let soundEnabled = true;
+  let audioCtx = null;
+
+  function toggleSound() {
+    soundEnabled = !soundEnabled;
+    document.getElementById('soundToggle').textContent = soundEnabled ? '🔊 Som: ON' : '🔇 Som: OFF';
+  }
+
+  function playDiceSound() {
+    if (!soundEnabled) return;
+    try {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+
+      const now = audioCtx.currentTime;
+      // Simula 6 quiques rápidos de dados poliédricos na mesa com desaceleração natural
+      const bounces = [0, 0.055, 0.115, 0.185, 0.27, 0.37];
+
+      bounces.forEach((offset, idx) => {
+        const t = now + offset;
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        const filter = audioCtx.createBiquadFilter();
+
+        // Clique seco de resina/plástico duro
+        osc.type = 'triangle';
+        const baseFreq = 650 + Math.random() * 450 - (idx * 35);
+        osc.frequency.setValueAtTime(baseFreq, t);
+        osc.frequency.exponentialRampToValueAtTime(140, t + 0.035);
+
+        filter.type = 'bandpass';
+        filter.frequency.setValueAtTime(1200, t);
+        filter.Q.setValueAtTime(1.5, t);
+
+        // Volume diminui a cada quique
+        const vol = Math.max(0.05, 0.32 - idx * 0.045);
+        gain.gain.setValueAtTime(0.001, t);
+        gain.gain.linearRampToValueAtTime(vol, t + 0.004);
+        gain.gain.exponentialRampToValueAtTime(0.001, t + 0.04);
+
+        osc.connect(filter);
+        filter.connect(gain);
+        gain.connect(audioCtx.destination);
+
+        osc.start(t);
+        osc.stop(t + 0.045);
+      });
+    } catch (e) {
+      // Ignora silenciosamente se o navegador bloquear áudio
+    }
+  }
+
+  // Configuração dos 10 slots do Jogador
+  const playerSlots = [
+    { id: 0, label: "Pata Principal", col: "colPaws" },
+    { id: 1, label: "Outra Pata", col: "colPaws" },
+    { id: 2, label: "Corpo 1", col: "colBody" },
+    { id: 3, label: "Corpo 2", col: "colBody" },
+    { id: 4, label: "Bolsa 1", col: "colPack" },
+    { id: 5, label: "Bolsa 2", col: "colPack" },
+    { id: 6, label: "Bolsa 3", col: "colPack" },
+    { id: 7, label: "Bolsa 4", col: "colPack" },
+    { id: 8, label: "Bolsa 5", col: "colPack" },
+    { id: 9, label: "Bolsa 6", col: "colPack" }
   ];
 
-  const invGrid = document.getElementById('inventoryGrid');
-
-  // Renderiza os 10 slots do inventário
-  slotLabels.forEach((label, index) => {
-    const slot = document.createElement('div');
-    slot.className = 'inv-slot';
-    slot.id = `slot-${index}`;
-    slot.innerHTML = `
+  playerSlots.forEach(s => {
+    const container = document.getElementById(s.col);
+    const div = document.createElement('div');
+    div.className = 'inv-slot';
+    div.id = `slot-${s.id}`;
+    div.innerHTML = `
       <div class="slot-header">
-        <span>${label}</span>
-        <input type="checkbox" id="occ-${index}" title="Marcar como ocupado (ex: item de 2 espaços)" onchange="toggleOccupied(${index})">
+        <span>${s.label}</span>
+        <input type="checkbox" id="occ-${s.id}" title="Marcar espaço ocupado (ex: item de 2 espaços)" onchange="toggleOccupied(${s.id})">
       </div>
-      <textarea id="item-${index}" placeholder="Item / Condição" oninput="autoCheckOccupied(${index})"></textarea>
+      <textarea id="item-${s.id}" placeholder="Item / Condição" oninput="autoCheckOccupied(${s.id})"></textarea>
       <div class="usage-dots" title="Pontos de Uso">
-        <span style="font-size:0.7rem">Uso:</span>
-        <span class="dot" data-slot="${index}" data-dot="0" onclick="toggleDot(${index}, 0)"></span>
-        <span class="dot" data-slot="${index}" data-dot="1" onclick="toggleDot(${index}, 1)"></span>
-        <span class="dot" data-slot="${index}" data-dot="2" onclick="toggleDot(${index}, 2)"></span>
+        <span style="font-size:0.68rem">Uso:</span>
+        <span class="dot" data-slot="${s.id}" data-dot="0" onclick="toggleDot(${s.id}, 0)"></span>
+        <span class="dot" data-slot="${s.id}" data-dot="1" onclick="toggleDot(${s.id}, 1)"></span>
+        <span class="dot" data-slot="${s.id}" data-dot="2" onclick="toggleDot(${s.id}, 2)"></span>
       </div>
     `;
-    invGrid.appendChild(slot);
+    container.appendChild(div);
   });
 
-  // Funções de rolagem
+  // Renderiza os 6 slots do Ajudante
+  const hirelingSlotNames = ["Pata Principal", "Corpo 1", "Bolsa 1", "Outra Pata", "Corpo 2", "Bolsa 2"];
+  const hInv = document.getElementById('hirelingInv');
+  hirelingSlotNames.forEach((label, i) => {
+    const div = document.createElement('div');
+    div.className = 'inv-slot';
+    div.style.minHeight = '85px';
+    div.innerHTML = `
+      <div class="slot-header"><span>${label}</span></div>
+      <textarea id="hItem-${i}" style="height:45px;" placeholder="Item"></textarea>
+    `;
+    hInv.appendChild(div);
+  });
+
+  // Tabelas Oficiais do Livro
+  const firstNames = ["Ada","Ágata","Agnes","Alecrina","Aloe","April","Arruda","Avelã","Azaléia","Azevinha","Bacia","Beladona","Bete","Branca","Bri","Briana","Calêndula","Canela","Carda","Cereja","Clara","Dália","Elen","Elsa","Esmeralda","Florência","Graça","Íris","Jacinta","Junípera","Lavanda","Lírio","Magnólia","Margarida","Marjerona","Mirtíla","Odete","Olívia","Opala","Papoula","Pérola","Pimenta","Rosa","Salgueira","Sandy","Susana","Urucum","Urze","Violeta","Xista","Acácio","Aldo","Ambrósio","Anato","Anísio","Augusto","Azedinho","Bardano","Beijo","Berilo","Bétulo","Boldo","Branquelo","Brejo","Cássio","Chicória","Clívio","Coelhada","Conrado","Cupim","Doca","Edmundo","Elmo","Endro","Ernesto","Espinheiro","Esporão","Estilite","Estragão","Festo","Francisco","Funcho","Gil","Girassol","Horácio","Jasper","João","Joaquim","Lorenzo","Louro","Manjericão","Manteiga","Márcio","Orelhudo","Oliver","Orin","Ramos","Ripchip","Simon","Sorveiro"];
+  const matNames = ["Bodespinha","Branco","Caisemente","Espinho","Fazedor","Forte","Grande","Graum","Iscador","Larinverna","Larverano","Manteiglobo","Metade","Montacervo","Neves","Perigo","Preto","Sagaz","Subagato","Tunelador"];
+  const signs = ["Estrela (Corajoso / Imprudente)", "Roda (Trabalhador / Sem imaginação)", "Bolota (Curioso / Teimoso)", "Tempestade (Generoso / Raivoso)", "Lua (Sábio / Misterioso)", "Mãe (Protetor / Ansioso)"];
+  const coatColors = ["Chocolate", "Preto", "Branco", "Caramelo", "Cinza", "Azulado"];
+  const coatPatterns = ["uniforme", "tigrado", "desigual", "listrado", "marmorizado", "pintado"];
+  const looks = {
+    11:"Cicatrizes no corpo",12:"Corpulento",13:"Esquelético",14:"Esguio",15:"Pequenino",16:"Enorme",
+    21:"Pintura de guerra",22:"Roupas estrangeiras",23:"Roupas elegantes",24:"Roupas remendadas",25:"Roupas da moda",26:"Roupas sujas",
+    31:"Sem uma orelha",32:"Caroços no rosto",33:"Rosto lindo",34:"Rosto redondo",35:"Rosto delicado",36:"Rosto alongado",
+    41:"Pelagem aparada",42:"Tranças",43:"Pelo pintado",44:"Pelo raspado",45:"Pelo crespo",46:"Pelo sedoso",
+    51:"Olhos muito pretos",52:"Tapa-olho",53:"Olhos vermelhos",54:"Olhos sábios",55:"Olhos penetrantes",56:"Olhos brilhantes",
+    61:"Cauda cortada",62:"Cauda em chicote",63:"Cauda com tufos",64:"Cauda atarracada",65:"Cauda em gancho",66:"Cauda encaracolada"
+  };
+
+  const backgrounds = {
+    "1-1": ["Cobaia", "Feitiço: Míssil Mágico", "Capa de Chumbo (Armadura Pesada)"],
+    "1-2": ["Forrageador de cozinha", "Escudo e Gibão (Armadura Leve)", "Panelas"],
+    "1-3": ["Rato de gaiola", "Feitiço: Ser Entendido", "Garrafa de leite"],
+    "1-4": ["Bruxa de Sebe", "Feitiço: Cura", "Vara de incenso"],
+    "1-5": ["Coureiro", "Escudo e Gibão (Armadura Leve)", "Tesoura de tosquear"],
+    "1-6": ["Valentão de rua", "Adaga (Leve, d6)", "Cantil de café"],
+    "2-1": ["Sacerdote mendicante", "Feitiço: Restaurar", "Símbolo sagrado"],
+    "2-2": ["Pastor de besouros", "Ajudante: Besouro Leal", "Vara, 15 cm"],
+    "2-3": ["Cervejeiro", "Ajudante: Tocheiro Bêbado", "Barril pequeno de cerveja"],
+    "2-4": ["Rato pescador", "Rede", "Agulha (Leve, d6)"],
+    "2-5": ["Ferreiro", "Martelo (Médio, d6/d8)", "Lima de metal"],
+    "2-6": ["Arameiro", "Fio, carretel", "Lanterna elétrica"],
+    "3-1": ["Lenhador", "Machado (Médio, d6/d8)", "Barbante, rolo"],
+    "3-2": ["Cultista de morcegos", "Feitiço: Escuridão", "Saco de dentes de morcego"],
+    "3-3": ["Mineiro de estanho", "Picareta (Média, d6/d8)", "Lanterna"],
+    "3-4": ["Coletor de lixo", "Gancho de lixo (Pesado, d10)", "Espelho"],
+    "3-5": ["Escalador de muros", "Anzol", "Linha, carretel"],
+    "3-6": ["Mercador", "Ajudante: Ratazana de Carga", "Promissória de 20g de um Aristorato"],
+    "4-1": ["Tripulante de jangada", "Martelo (Médio, d6/d8)", "Estacas de madeira"],
+    "4-2": ["Pastor de vermes", "Vara, 15 cm", "Sabão"],
+    "4-3": ["Montador de pardal", "Anzol", "Óculos de proteção"],
+    "4-4": ["Guia de esgoto", "Lima de metal", "Linha, carretel"],
+    "4-5": ["Guarda de prisão", "Corrente, 15 cm", "Lança (Pesada, d10)"],
+    "4-6": ["Fazendeiro de fungos", "Cogumelo seco (ração)", "Máscara contra esporos"],
+    "5-1": ["Construtor de barragem", "Pá", "Estacas de madeira"],
+    "5-2": ["Cartógrafo", "Pena e tinta", "Bússola"],
+    "5-3": ["Ladrão de ratoeira", "Bloco de queijo", "Cola"],
+    "5-4": ["Vagabundo", "Barraca", "Mapa do tesouro, duvidoso"],
+    "5-5": ["Lavrador", "Lança (Pesada, d10)", "Apito"],
+    "5-6": ["Mensageiro", "Saco de dormir", "Documentos, selados"],
+    "6-1": ["Trovador", "Instrumento musical", "Kit de disfarce"],
+    "6-2": ["Apostador", "Conjunto de dados viciados", "Espelho"],
+    "6-3": ["Seringueiro", "Balde", "Estacas de madeira"],
+    "6-4": ["Apicultor", "Pote de mel", "Rede"],
+    "6-5": ["Bibliotecário", "Pedaço de livro obscuro", "Pena e tinta"],
+    "6-6": ["Aristorato pobre", "Chapéu de feltro", "Perfume"]
+  };
+
+  function d(sides) { return Math.floor(Math.random() * sides) + 1; }
+
+  function roll3d6Keep2() {
+    const rolls = [d(6), d(6), d(6)].sort((a, b) => b - a);
+    return rolls[0] + rolls[1];
+  }
+
+  function generateRandomMouse() {
+    if (!confirm("Gerar um novo rato aleatório? Isso substituirá os dados atuais da ficha.")) return;
+
+    playDiceSound();
+
+    const str = roll3d6Keep2();
+    const dex = roll3d6Keep2();
+    const wil = roll3d6Keep2();
+    const hp = d(6);
+    const pips = d(6);
+
+    const bgData = backgrounds[`${hp}-${pips}`];
+    const fn = firstNames[Math.floor(Math.random() * firstNames.length)];
+    const mn = matNames[Math.floor(Math.random() * matNames.length)];
+    const d66 = d(6) * 10 + d(6);
+
+    document.getElementById('name').value = `${fn} ${mn}`;
+    document.getElementById('background').value = bgData[0];
+    document.getElementById('sign').value = signs[d(6) - 1];
+    document.getElementById('coat').value = `${coatColors[d(6) - 1]} ${coatPatterns[d(6) - 1]}`;
+    document.getElementById('look').value = looks[d66];
+    document.getElementById('level').value = 1;
+    document.getElementById('xp').value = 0;
+    document.getElementById('grit').value = 0;
+
+    document.getElementById('strMax').value = str;
+    document.getElementById('strCur').value = str;
+    document.getElementById('dexMax').value = dex;
+    document.getElementById('dexCur').value = dex;
+    document.getElementById('wilMax').value = wil;
+    document.getElementById('wilCur').value = wil;
+    document.getElementById('hpMax').value = hp;
+    document.getElementById('hpCur').value = hp;
+    document.getElementById('pips').value = pips;
+
+    for (let i = 0; i < 10; i++) {
+      document.getElementById(`item-${i}`).value = "";
+      document.getElementById(`occ-${i}`).checked = false;
+      document.getElementById(`slot-${i}`).classList.remove('occupied');
+    }
+    document.querySelectorAll('.dot').forEach(dot => dot.classList.remove('filled'));
+
+    const startItems = [
+      { slot: 0, text: "Arma à escolha (ex: Espada d6/d8)" },
+      { slot: 4, text: "Tochas" },
+      { slot: 5, text: "Rações" },
+      { slot: 6, text: bgData[1] },
+      { slot: 7, text: bgData[2] }
+    ];
+
+    const highestStat = Math.max(str, dex, wil);
+    let extraNote = "";
+    if (highestStat <= 9) {
+      const extraBg = backgrounds[`${d(6)}-${d(6)}`];
+      if (highestStat <= 7) {
+        startItems.push({ slot: 8, text: extraBg[1] });
+        startItems.push({ slot: 9, text: extraBg[2] });
+        extraNote = ` Atributo máx. ≤ 7: recebeu ambos os itens extras de ${extraBg[0]}!`;
+      } else {
+        const chosen = d(2) === 1 ? extraBg[1] : extraBg[2];
+        startItems.push({ slot: 8, text: chosen });
+        extraNote = ` Atributo máx. ≤ 9: recebeu item extra de ${extraBg[0]}!`;
+      }
+    }
+
+    startItems.forEach(item => {
+      document.getElementById(`item-${item.slot}`).value = item.text;
+      autoCheckOccupied(item.slot);
+    });
+
+    document.getElementById('desc').value = extraNote.trim();
+    document.getElementById('diceLog').innerHTML = `🐭 Rato gerado: <strong>${fn} ${mn}</strong> (${bgData[0]}).${extraNote}`;
+    saveState();
+  }
+
+  // Rolagens com Som, Nível de Dificuldade e Vantagem/Desvantagem
   function rollDice(sides, label) {
-    const res = Math.floor(Math.random() * sides) + 1;
-    document.getElementById('diceLog').innerHTML = `<span>🎲 <strong>${label}:</strong> Resultado <strong>${res}</strong> (1-${sides})</span>`;
+    playDiceSound();
+    const res = d(sides);
+    document.getElementById('diceLog').innerHTML = `🎲 <strong>${label}:</strong> Resultado <strong>${res}</strong>`;
   }
 
   function saveRoll(statName, inputId) {
-    const target = parseInt(document.getElementById(inputId).value) || 0;
-    const roll = Math.floor(Math.random() * 20) + 1;
-    const success = roll <= target;
+    playDiceSound();
+
+    const baseStat = parseInt(document.getElementById(inputId).value) || 0;
+    const diffSelect = document.getElementById('rollDiff');
+    const diffMod = parseInt(diffSelect.value) || 0;
+    const diffLabel = diffSelect.options[diffSelect.selectedIndex].text.split(' ')[0];
+
+    const target = Math.max(1, baseStat + diffMod);
+    const mode = document.getElementById('rollType').value;
+    const r1 = d(20);
+    const r2 = d(20);
+    let finalRoll = r1;
+    let detail = `${r1}`;
+
+    if (mode === 'adv') {
+      finalRoll = Math.min(r1, r2);
+      detail = `Vantagem [${r1}, ${r2}] → <strong>${finalRoll}</strong>`;
+    } else if (mode === 'dis') {
+      finalRoll = Math.max(r1, r2);
+      detail = `Desvantagem [${r1}, ${r2}] → <strong>${finalRoll}</strong>`;
+    } else {
+      detail = `<strong>${finalRoll}</strong>`;
+    }
+
+    const modText = diffMod !== 0 ? ` [${diffLabel} ${diffMod > 0 ? '+' + diffMod : diffMod}]` : '';
+    const success = finalRoll <= target;
     const statusText = success
-      ? `<span style="color:#7bed9f">SUCESSO! (${roll} ≤ ${target})</span>`
-      : `<span style="color:#ff6b81">FALHA! (${roll} > ${target})</span>`;
-    document.getElementById('diceLog').innerHTML = `<span>🎲 Teste de <strong>${statName}</strong>: Rolou <strong>${roll}</strong> — ${statusText}</span>`;
+      ? `<span style="color:#7bed9f">SUCESSO! (${finalRoll} ≤ ${target})</span>`
+      : `<span style="color:#ff6b81">FALHA! (${finalRoll} > ${target})</span>`;
+
+    document.getElementById('diceLog').innerHTML = `🎲 Teste de <strong>${statName}</strong>${modText}: ${detail} — ${statusText}`;
   }
 
-  // Controle visual do inventário
+  // Controle de Inventário e Carga Pesada
+  function checkHeavyLoad() {
+    let count = 0;
+    for (let i = 0; i < 10; i++) {
+      if (document.getElementById(`occ-${i}`).checked) count++;
+    }
+    document.getElementById('heavyAlert').style.display = count >= 10 ? 'inline' : 'none';
+  }
+
   function toggleOccupied(idx) {
     const slot = document.getElementById(`slot-${idx}`);
     const isChecked = document.getElementById(`occ-${idx}`).checked;
     slot.classList.toggle('occupied', isChecked);
+    checkHeavyLoad();
     saveState();
   }
 
@@ -405,7 +876,11 @@
     saveState();
   }
 
-  // Salvamento automático no navegador
+  function toggleHireling() {
+    document.getElementById('hirelingContent').classList.toggle('open');
+  }
+
+  // Persistência Local + JSON
   function saveState() {
     const data = {};
     document.querySelectorAll('input, textarea').forEach(el => {
@@ -417,11 +892,11 @@
     document.querySelectorAll('.dot.filled').forEach(d => {
       data.dots.push(`${d.dataset.slot}-${d.dataset.dot}`);
     });
-    localStorage.setItem('mausritter_sheet_v1', JSON.stringify(data));
+    localStorage.setItem('mausritter_sheet_v2', JSON.stringify(data));
   }
 
   function loadState(customData = null) {
-    const raw = customData || localStorage.getItem('mausritter_sheet_v1');
+    const raw = customData || localStorage.getItem('mausritter_sheet_v2');
     if (!raw) return;
     const data = typeof raw === 'string' ? JSON.parse(raw) : raw;
 
@@ -449,12 +924,13 @@
         if (dotEl) dotEl.classList.add('filled');
       });
     }
+    checkHeavyLoad();
   }
 
   function exportData() {
     saveState();
-    const data = localStorage.getItem('mausritter_sheet_v1');
-    const name = document.getElementById('name').value.trim() || 'rato';
+    const data = localStorage.getItem('mausritter_sheet_v2');
+    const name = document.getElementById('name').value.trim().replace(/\s+/g, '_') || 'rato';
     const blob = new Blob([data], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -476,7 +952,7 @@
 
   function resetSheet() {
     if (confirm('Apagar todos os dados desta ficha?')) {
-      localStorage.removeItem('mausritter_sheet_v1');
+      localStorage.removeItem('mausritter_sheet_v2');
       location.reload();
     }
   }
